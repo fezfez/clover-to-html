@@ -1,9 +1,8 @@
 <?php
+
+use CloverToHtml\Service\CliFactory;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Input\ArgvInput;
-use CloverToHtml\Service\CliFactory;
-
-ini_set('xdebug.max_nesting_level', 3000);
 
 chdir(realpath('./'));
 
@@ -15,8 +14,4 @@ if (is_file(__DIR__.'/../vendor/autoload.php') === true) {
     throw new RuntimeException('Error: vendor/autoload.php could not be found. Did you run php composer.phar install?');
 }
 
-$output = new ConsoleOutput();
-$input  = new ArgvInput();
-$cli    = CliFactory::getInstance($output);
-
-$cli->run($input, $output);
+CliFactory::getInstance()->run(new ArgvInput(), new ConsoleOutput());

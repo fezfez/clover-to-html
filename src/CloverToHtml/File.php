@@ -24,10 +24,6 @@ class File
      * @var array
      */
     private $lines = array();
-    /**
-     * @var array
-     */
-    private $classMethod = array();
 
     /**
      * @param string $value
@@ -43,7 +39,6 @@ class File
     public function addClass(ClassDto $value)
     {
         $this->class[] = $value;
-        $this->classMethod[$value->getName()] = array($value->getMethodCount(), count($this->class));
     }
 
     /**

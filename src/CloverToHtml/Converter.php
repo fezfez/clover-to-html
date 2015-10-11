@@ -50,7 +50,8 @@ class Converter
 
         $this->render->render(
             $this->hydrator->xmlToDto(simplexml_load_file($clover), new Root()),
-            $target
+            $target,
+            $templatePath
         );
     }
 }

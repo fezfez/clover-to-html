@@ -17,10 +17,6 @@ class ClassDto
      */
     private $name;
     /**
-     * @var string
-     */
-    private $namespace;
-    /**
      * @var array
      */
     private $method = array();

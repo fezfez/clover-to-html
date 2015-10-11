@@ -11,7 +11,7 @@ install:
   - composer install
 
 script:
-  - ./vendor/bin/phpunit --coverage-clover coverage.clover tests
+  - ./vendor/bin/phpunit --coverage-clover coverage.clover
   - if [[ $TRAVIS_PHP_VERSION != *7* ]]; then ./bin/clover-to-html cloverToHtml:convert coverage.clover coverage; fi;
   
 after_script:

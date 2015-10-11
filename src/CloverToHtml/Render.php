@@ -50,7 +50,7 @@ class Render
         }
 
         foreach ($root->getDirectoryCollection() as $directory) {
-            $this->renderDirectory($directory, $target, $root->getBasePath());
+            $this->renderDirectory($directory, $target);
             foreach ($directory->getFileCollection() as $file) {
                 $this->renderFile($file, $target, $root->getBasePath());
             }
@@ -120,7 +120,7 @@ class Render
      * @param string    $target
      * @param string    $basePath
      */
-    private function renderDirectory(Directory $directory, $target, $basePath)
+    private function renderDirectory(Directory $directory, $target)
     {
         $path = $target.'/'.$directory->getDestination();
 

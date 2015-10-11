@@ -28,7 +28,7 @@ class CliFactory
      *
      * @return Application
      */
-    public static function getInstance(OutputInterface $output)
+    public static function getInstance()
     {
         $questionHelper = new QuestionHelper();
         $application = new Application('CloverToHtml Command Line Interface', 'Beta 0.1.0');

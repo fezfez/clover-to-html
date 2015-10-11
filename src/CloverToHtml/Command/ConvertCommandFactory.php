@@ -10,7 +10,6 @@
  */
 namespace CloverToHtml\Command;
 
-use Symfony\Component\Console\Output\OutputInterface;
 use CloverToHtml\ConverterFactory;
 
 /**

@@ -2,6 +2,7 @@
 	"name" : "fezfez/coverage-clover-viewer",
 	"description" : "clover to html",
 	"type" : "library",
+	"license": "MIT",
 	"authors" : [{
 			"name" : "Stéphane Demonchaux",
 			"email" : "demonchaux.stephane@gmail.com"
