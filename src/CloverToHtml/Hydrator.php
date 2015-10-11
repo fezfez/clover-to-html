@@ -27,8 +27,19 @@ class Hydrator
             $root = $this->hydrateFiles($data, $root);
         }
 
-        $basePath = $this->calculeBasePath($root);
-        $root->setBasePath($basePath);
+        $root->setBasePath($this->calculeBasePath($root));
+
+        return $this->hydrateDirectory($root);
+    }
+
+    /**
+     * @param Root $root
+     *
+     * @return Root
+     */
+    private function hydrateDirectory(Root $root)
+    {
+        $basePath = $root->getBasePath();
 
         foreach ($root->getFileCollection() as $file) {
             $dirpath = dirname($file->getDestination($basePath));
@@ -52,7 +63,7 @@ class Hydrator
      *
      * @return string
      */
-    public function calculeBasePath(Root $root)
+    private function calculeBasePath(Root $root)
     {
         $pathCollection = array();
         foreach ($root->getFileCollection() as $file) {
@@ -113,31 +124,14 @@ class Hydrator
         $file = new File();
         $file->setName($this->findAttributeByName($fileXml, 'name'));
         $methodNumber = 0;
+
         foreach ($fileXml->class as $classXml) {
             $class = new ClassDto();
             $class->setName($this->findAttributeByName($classXml, 'name'));
             $class->setMethodCount($this->findAttributeByName($classXml->metrics, 'methods'));
             $class->setLineCount($this->findAttributeByName($classXml->metrics, 'statements'));
             $class->setMethodCoveredCount($this->findAttributeByName($classXml->metrics, 'coveredmethods'));
-
-            foreach ($fileXml->line as $lineXml) {
-                $type = $this->findAttributeByName($lineXml, 'type');
-
-                // Must add method to class
-                if ($type === 'method') {
-                    $class->addMethod(
-                        $this->findAttributeByName($lineXml, 'name'),
-                        $this->findAttributeByName($lineXml, 'crap'),
-                        0,
-                        $this->findAttributeByName($lineXml, 'num')
-                    );
-                    ++$methodNumber;
-                }
-
-                if ($class->getMethodCount() === $methodNumber) {
-                    break;
-                }
-            }
+            $class = $this->hydrateMethod($fileXml, $class, $methodNumber);
 
             $file->addClass($class);
         }
@@ -151,6 +145,36 @@ class Hydrator
         }
 
         return $file;
+    }
+
+    /**
+     * @param \SimpleXMLElement $fileXml
+     * @param ClassDto $class
+     *
+     * @return ClassDto
+     */
+    private function hydrateMethod(\SimpleXMLElement $fileXml, ClassDto $class, &$methodNumber)
+    {
+        foreach ($fileXml->line as $lineXml) {
+            $type = $this->findAttributeByName($lineXml, 'type');
+
+            // Must add method to class
+            if ($type === 'method') {
+                $class->addMethod(
+                    $this->findAttributeByName($lineXml, 'name'),
+                    $this->findAttributeByName($lineXml, 'crap'),
+                    0,
+                    $this->findAttributeByName($lineXml, 'num')
+                );
+                ++$methodNumber;
+            }
+
+            if ($class->getMethodCount() === $methodNumber) {
+                break;
+            }
+        }
+
+        return $class;
     }
 
     /**

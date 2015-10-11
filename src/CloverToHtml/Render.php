@@ -30,20 +30,11 @@ class Render
     /**
      * @param Root   $root
      * @param string $target
+     * @param string $templatePath
      */
     public function render(Root $root, $target, $templatePath = false)
     {
-        if ($templatePath === false) {
-            $templatePath = __DIR__.'/Template/';
-        }
-
-        if (($this->twig->getLoader() instanceof \Twig_Loader_Filesystem) === false) {
-            throw new \InvalidArgumentException(
-                sprintf('Twig loader "%s" not supported', get_class($this->twig->getLoader()))
-            );
-        }
-
-        $this->twig->getLoader()->setPaths($templatePath);
+        $this->setTemplatePath($templatePath);
 
         foreach ($root->getFileCollection() as $file) {
             $this->renderFile($file, $target, $root->getBasePath());
@@ -56,6 +47,33 @@ class Render
             }
         }
 
+        $this->copyAssets($templatePath);
+    }
+
+    /**
+     * @param string $templatePath
+     * @throws \InvalidArgumentException
+     */
+    private function setTemplatePath($templatePath)
+    {
+        if ($templatePath === false) {
+            $templatePath = __DIR__.'/Template/';
+        }
+
+        if (($this->twig->getLoader() instanceof \Twig_Loader_Filesystem) === false) {
+            throw new \InvalidArgumentException(
+                sprintf('Twig loader "%s" not supported', get_class($this->twig->getLoader()))
+            );
+        }
+
+        $this->twig->getLoader()->setPaths($templatePath);
+    }
+
+    /**
+     * @param string $templatePath
+     */
+    private function copyAssets($templatePath)
+    {
         $configFile = $templatePath.'/config.json';
 
         if (is_file($configFile)) {
