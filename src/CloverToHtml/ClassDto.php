@@ -50,7 +50,7 @@ class ClassDto
     }
 
     /**
-     * @param string $value
+     * @param integer $value
      */
     public function setMethodCount($value)
     {
@@ -73,7 +73,12 @@ class ClassDto
      */
     public function addMethod($name, $crap, $lineCount, $lineNumber)
     {
-        $this->method[] = array('name' => $name, 'crap' => $crap, 'lineCount' => $lineCount, 'lineNumber' => $lineNumber);
+        $this->method[] = array(
+            'name' => $name,
+            'crap' => $crap,
+            'lineCount' => $lineCount,
+            'lineNumber' => $lineNumber
+        );
     }
 
     /**

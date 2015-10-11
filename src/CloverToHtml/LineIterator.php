@@ -20,6 +20,10 @@ class LineIterator implements \Iterator
      * @var \SplFileObject
      */
     private $file;
+    /**
+     * @var integer
+     */
+    private $position;
 
     /**
      * Construct.

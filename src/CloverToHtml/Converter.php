@@ -28,7 +28,7 @@ class Converter
     public function __construct(Hydrator $hydrator, Render $render)
     {
         $this->hydrator = $hydrator;
-        $this->render = $render;
+        $this->render   = $render;
     }
 
     /**

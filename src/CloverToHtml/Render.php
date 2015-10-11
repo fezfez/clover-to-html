@@ -122,7 +122,7 @@ class Render
      */
     private function renderDirectory(Directory $directory, $target, $basePath)
     {
-        $path = $target.'/'.$directory->getDestination($basePath);
+        $path = $target.'/'.$directory->getDestination();
 
         $this->createDirIfNotExist($path);
 

@@ -12,72 +12,126 @@ namespace CloverToHtml;
 
 class File
 {
+    /**
+     * @var string
+     */
     private $name;
+    /**
+     * @var array
+     */
     private $class = array();
+    /**
+     * @var array
+     */
     private $lines = array();
+    /**
+     * @var array
+     */
     private $classMethod = array();
 
+    /**
+     * @param string $value
+     */
     public function setName($value)
     {
         $this->name = $value;
     }
 
+    /**
+     * @param ClassDto $value
+     */
     public function addClass(ClassDto $value)
     {
         $this->class[] = $value;
         $this->classMethod[$value->getName()] = array($value->getMethodCount(), count($this->class));
     }
 
+    /**
+     * @param integer $number
+     * @param string $type
+     * @param boolean $isCovered
+     */
     public function addLine($number, $type, $isCovered)
     {
         $this->lines[$number] = array('number' => $number, 'type' => $type, 'isCovered' => $isCovered);
     }
 
+    /**
+     * @param string $basePath
+     * @return string
+     */
     public function getDestination($basePath)
     {
         return dirname(str_replace($basePath, '', $this->name)).'/'.basename($this->name, '.php').'.html';
     }
 
+    /**
+     * @return string
+     */
     public function getName()
     {
         return $this->name;
     }
 
+    /**
+     * @return string
+     */
     public function getFileName()
     {
         return basename($this->name);
     }
 
+    /**
+     * @return string
+     */
     public function getLink()
     {
         return basename($this->name, '.php').'.html';
     }
 
+    /**
+     * @return array
+     */
     public function getClassCollection()
     {
         return $this->class;
     }
 
+    /**
+     * @return \CloverToHtml\LineIterator
+     */
     public function getLineCollection()
     {
         return new LineIterator($this->name, $this->lines);
     }
 
+    /**
+     * @return array
+     */
     public function getLineCoverage()
     {
         return $this->lines;
     }
 
+    /**
+     * @return string
+     */
     public function getDir()
     {
         return dirname($this->name);
     }
 
+    /**
+     * @return number
+     */
     public function getCountClass()
     {
         return count($this->class);
     }
 
+    /**
+     * @return number
+     */
     public function getMethodCoveredCount()
     {
         $methodCovered = 0;
@@ -89,6 +143,9 @@ class File
         return $methodCovered;
     }
 
+    /**
+     * @return number
+     */
     public function getMethodCount()
     {
         $method = 0;
@@ -100,6 +157,9 @@ class File
         return $method;
     }
 
+    /**
+     * @return number
+     */
     public function getLineCount()
     {
         $line = 0;
