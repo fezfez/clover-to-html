@@ -11,8 +11,8 @@ install:
   - composer install
 
 script:
-  - ./vendor/bin/phpunit --coverage-clover coverage.clover
-  - ./bin/clover-to-html coverage.clover coverage
+  - ./vendor/bin/phpunit --coverage-clover coverage.clover tests
+  - ./bin/clover-to-html cloverToHtml:convert coverage.clover coverage
   
 after_script:
   - wget https://scrutinizer-ci.com/ocular.phar
