@@ -34,7 +34,7 @@ class Render
      */
     public function render(Root $root, $target, $templatePath = false)
     {
-        $this->setTemplatePath($templatePath);
+        $templatePath = $this->setTemplatePath($templatePath);
 
         foreach ($root->getFileCollection() as $file) {
             $this->renderFile($file, $target, $root->getBasePath());
@@ -47,14 +47,17 @@ class Render
             }
         }
 
-        $this->copyAssets($templatePath);
+        $this->copyAssets($templatePath, $target);
     }
 
     /**
-     * @param string $templatePath
+     * @param string|false $templatePath
+     *
      * @throws \InvalidArgumentException
+     *
+     * @return string
      */
-    private function setTemplatePath($templatePath)
+    private function setTemplatePath($templatePath = false)
     {
         if ($templatePath === false) {
             $templatePath = __DIR__.'/Template/';
@@ -67,12 +70,15 @@ class Render
         }
 
         $this->twig->getLoader()->setPaths($templatePath);
+
+        return $templatePath;
     }
 
     /**
      * @param string $templatePath
+     * @param string $target
      */
-    private function copyAssets($templatePath)
+    private function copyAssets($templatePath, $target)
     {
         $configFile = $templatePath.'/config.json';
 

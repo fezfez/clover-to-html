@@ -83,16 +83,19 @@ class Hydrator
     private function getCommonPath(array $paths)
     {
         $lastOffset = 1;
-        $common = '/';
+        $common     = '/';
+
         while (($index = strpos($paths[0], '/', $lastOffset)) !== false) {
             $dirLen = $index - $lastOffset + 1;    // include /
-            $dir = substr($paths[0], $lastOffset, $dirLen);
+            $dir    = substr($paths[0], $lastOffset, $dirLen);
+
             foreach ($paths as $path) {
                 if (substr($path, $lastOffset, $dirLen) != $dir) {
                     return $common;
                 }
             }
-            $common .= $dir;
+
+            $common    .= $dir;
             $lastOffset = $index + 1;
         }
 

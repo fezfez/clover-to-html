@@ -30,7 +30,7 @@ class CliFactory
     public static function getInstance()
     {
         $questionHelper = new QuestionHelper();
-        $application = new Application('CloverToHtml Command Line Interface', 'Beta 0.1.0');
+        $application    = new Application('CloverToHtml Command Line Interface', 'Beta 0.1.0');
         $application->getHelperSet()->set(new FormatterHelper(), 'formatter');
         $application->getHelperSet()->set($questionHelper, 'question');
 

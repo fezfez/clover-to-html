@@ -33,7 +33,7 @@ class LineIterator implements \Iterator
      */
     public function __construct($filePath, array $lines)
     {
-        $this->file = new \SplFileObject($filePath);
+        $this->file  = new \SplFileObject($filePath);
         $this->lines = $lines;
     }
 
@@ -51,10 +51,11 @@ class LineIterator implements \Iterator
      */
     public function current()
     {
-        $type = 'unkown';
+        $type      = 'unkown';
         $isCovered = false;
+
         if (isset($this->lines[$this->position])) {
-            $type = $this->lines[$this->position]['type'];
+            $type      = $this->lines[$this->position]['type'];
             $isCovered = $this->lines[$this->position]['isCovered'];
         }
 
