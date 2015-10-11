@@ -54,14 +54,6 @@ class ClassDto
     }
 
     /**
-     * @param string $value
-     */
-    public function setNamespace($value)
-    {
-        $this->namespace = $value;
-    }
-
-    /**
      * @param string $name
      * @param int    $crap
      * @param int    $lineCount

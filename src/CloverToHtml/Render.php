@@ -31,9 +31,9 @@ class Render
      * @param Root   $root
      * @param string $target
      */
-    public function render(Root $root, $target, $templatePath = null)
+    public function render(Root $root, $target, $templatePath = false)
     {
-        if ($templatePath === null) {
+        if ($templatePath === false) {
             $templatePath = __DIR__.'/Template/';
         }
 

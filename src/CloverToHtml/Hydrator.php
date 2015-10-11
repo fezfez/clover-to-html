@@ -65,11 +65,11 @@ class Hydrator
     /**
      * @see http://rosettacode.org/wiki/Find_common_directory_path#PHP
      *
-     * @param unknown $paths
+     * @param array $paths
      *
      * @return string
      */
-    private function getCommonPath($paths)
+    private function getCommonPath(array $paths)
     {
         $lastOffset = 1;
         $common = '/';
@@ -116,7 +116,6 @@ class Hydrator
         foreach ($fileXml->class as $classXml) {
             $class = new ClassDto();
             $class->setName($this->findAttributeByName($classXml, 'name'));
-            $class->setNamespace($this->findAttributeByName($classXml, 'namespace'));
             $class->setMethodCount($this->findAttributeByName($classXml->metrics, 'methods'));
             $class->setLineCount($this->findAttributeByName($classXml->metrics, 'statements'));
             $class->setMethodCoveredCount($this->findAttributeByName($classXml->metrics, 'coveredmethods'));

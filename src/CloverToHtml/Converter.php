@@ -38,7 +38,7 @@ class Converter
      *
      * @throws \InvalidArgumentException
      */
-    public function convert($clover, $target, $templatePath = null)
+    public function convert($clover, $target, $templatePath = false)
     {
         if (is_file($clover) === false) {
             throw new \InvalidArgumentException(sprintf('"%s" is not a file', $clover));
