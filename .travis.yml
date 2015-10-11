@@ -12,8 +12,8 @@ install:
 
 script:
   - ./vendor/bin/phpunit --coverage-clover coverage.clover tests
-  - if [[ 'php --version' != *7* ]]; then ./bin/clover-to-html cloverToHtml:convert coverage.clover coverage; fi;
+  - if [[ $TRAVIS_PHP_VERSION != *7* ]]; then ./bin/clover-to-html cloverToHtml:convert coverage.clover coverage; fi;
   
 after_script:
   - wget https://scrutinizer-ci.com/ocular.phar
-  - if [[ 'php --version' != *7* ]]; then php ocular.phar code-coverage:upload --format=php-clover coverage.clover; fi;
+  - if [[ $TRAVIS_PHP_VERSION != *7* ]]; then php ocular.phar code-coverage:upload --format=php-clover coverage.clover; fi;
