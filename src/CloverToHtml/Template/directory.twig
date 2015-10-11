@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>{{ file.getName }}</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{{ assets }}/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.8.0/styles/default.min.css">
+    <style type="text/css">
+        li.L0,li.L1,li.L2,li.L3,li.L5,li.L6,li.L7,li.L8{
+    list-style-type:unset !important;
+}
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+    <ul class="breadcrumb">
+        {% for pathInfo in directory.getBreadcrumb %}
+        {% if pathInfo.active %}
+            <li class="active">{{ pathInfo.name }}</li>
+        {% else %}
+            <li><a href="{{ pathInfo.link }}">{{ pathInfo.name }}</a></li>
+        {% endif %}
+        {% endfor %}
+    </ul>
+<div class="col-md-12">
+    <div class="col-md-3"></div>
+    <div class="col-md-3">Classes and Traits</div>
+    <div class="col-md-3">Functions and Methods</div>
+    <div class="col-md-3">Lines</div>
+</div>
+
+{% for file in directory.getFileCollection %}
+    <div class="col-md-12">
+        <div class="col-md-3"><a href="{{ file.getLink }}">{{ file.getFileName }}</a></div>
+        <div class="col-md-3">{{ file.getCountClass }}</div>
+        <div class="col-md-3">{{ file.getMethodCoveredCount }} / {{ file.getMethodCount }}</div>
+        <div class="col-md-3">{{ file.getLineCount }}</div>
+    </div>
+{% endfor %}
+    </div>
+  </body>
+</html>

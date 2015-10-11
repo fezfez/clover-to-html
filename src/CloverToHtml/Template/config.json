@@ -1,0 +1,8 @@
+{
+    "files": [
+        "css/bootstrap.min.css",
+        "css/bootstrap-theme.min.css",
+        "js/bootstrap.min.js",
+        "js/jquery.1.11.3.min.js"
+    ]
+}

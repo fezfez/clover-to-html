@@ -1,0 +1,38 @@
+{
+	"name" : "fezfez/coverage-clover-viewer",
+	"description" : "clover to html",
+	"type" : "library",
+	"authors" : [{
+			"name" : "Stéphane Demonchaux",
+			"email" : "demonchaux.stephane@gmail.com"
+		}
+	],
+	"keywords" : [
+		"clover to html",
+		"clover html",
+		"clover"
+	],
+	"homepage" : "https://github.com/fezfez/coverage-clover-viewer",
+	"require" : {
+        "symfony/console" : "~2.7",
+		"twig/twig": "~1.22"
+	},
+	"require-dev" : {
+		"phpunit/phpunit" : "4.8.*"
+	},
+	"autoload" : {
+		"psr-0" : {
+			"CloverToHtml" : "src/"
+		}
+	},
+	"support" : {
+		"source" : "https://github.com/fezfez/coverage-clover-viewer",
+		"email" : "demonchaux.stephane@gmail.com",
+		"issues" : "https://github.com/fezfez/coverage-clover-viewer/issues",
+		"wiki" : "https://github.com/fezfez/coverage-clover-viewer/blob/master/README.md"
+	},
+	"prefer-stable" : true,
+	"bin" : [
+		"bin/clover-to-html"
+	]
+}

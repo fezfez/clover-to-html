@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+    <title>{{ file.getName }}</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="{{ assets }}/css/bootstrap.min.css" rel="stylesheet">
+    
+<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.8.0/styles/default.min.css">
+    <style type="text/css">
+        li.L0,li.L1,li.L2,li.L3,li.L5,li.L6,li.L7,li.L8{
+    list-style-type:unset !important;
+}
+    .covered-line {
+        background-color:#C4F0C4;
+    }
+    .not-covered-line {
+        background-color:#FFA6A6;
+    }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+    <ul class="breadcrumb">
+    <li><a href="index.html">{{ file.getDir }}</a></li>
+    <li class="active">{{ file.getFileName }}</li>
+</ul>
+
+<div class="col-md-12">
+    <div class="col-md-3"></div>
+    <div class="col-md-3">Classes and Traits</div>
+    <div class="col-md-3">Functions and Methods</div>
+    <div class="col-md-3">Lines</div>
+</div>
+{% for class in file.getClassCollection %}
+    <div class="col-md-12">
+        <div class="col-md-3">{{ class.name }}</div>
+        <div class="col-md-3">1</div>
+        <div class="col-md-3">{{ class.getMethodCoveredCount }} / {{ class.getMethodCount }}</div>
+        <div class="col-md-3">{{ class.getLineCount }}</div>
+    </div>
+    {% for method in class.getMethodCollection %}
+        <div class="col-md-12">
+            <div class="col-md-3">
+                <a href="#line-{{ method.lineNumber }}" class="goto" data-target=".L{{ method.lineNumber }}">
+                    {{ method.name }}
+                </a>
+            </div>
+            <div class="col-md-3"></div>
+            <div class="col-md-3"></div>
+            <div class="col-md-3">{{ method.lineCount }}</div>
+        </div>
+    {% endfor %}
+{% endfor %}
+</table>
+
+<pre class="prettyprint linenums col-md-12">
+{% for lineNumber, line in file.getLineCollection %}{{ line.content  }}{% endfor %}
+</pre>
+    </div>
+    <script src="{{ assets }}/js/jquery.1.11.3.min.js"></script>
+    <script src="http://cdn.jsdelivr.net/jquery.scrollto/2.1.2/jquery.scrollTo.min.js"></script>
+   
+    <script>
+    $('.goto').on('click', function() {
+        $(this).scrollTo($(this).data('target'), 800);
+    });
+    
+    lines = [
+{% for line in file.getLineCoverage %} { 'isCovered' : {{ line.isCovered  ? '1':'0' }}, 'number' : {{ line.number }} },{% endfor %}
+];
+    function printDone() {
+        $.each(lines, function(index, line) {
+            $('ol.linenums li:eq(' + line.number + ')').addClass(line.isCovered == 1 ? 'covered-line' : 'not-covered-line');
+        });
+    }
+    window.exports = { print_done: printDone };
+    </script>
+     <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?callback=print_done"></script>
+  </body>
+</html>
