@@ -13,7 +13,6 @@ namespace CloverToHtml\Service;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Helper\FormatterHelper;
-use Symfony\Component\Console\Output\OutputInterface;
 use CloverToHtml\Command\ConvertCommandFactory;
 
 /**
