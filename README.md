@@ -5,6 +5,8 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/fezfez/coverage-clover-viewer/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/fezfez/coverage-clover-viewer/?branch=master)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/322a372b-337e-464d-a416-831441f5c7f2/small.png)](https://insight.sensiolabs.com/projects/322a372b-337e-464d-a416-831441f5c7f2)
 
+Currently in dev
+
 ## Install
 
 ```
