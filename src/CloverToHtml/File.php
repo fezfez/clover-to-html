@@ -57,7 +57,7 @@ class File
      */
     public function getDestination($basePath)
     {
-        return $this->getDir($basePath) . basename($this->name, '.php').'.html';
+        return $this->getDirectory($basePath) . basename($this->name, '.php').'.html';
     }
 
     /**
