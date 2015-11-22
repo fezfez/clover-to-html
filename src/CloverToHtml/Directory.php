@@ -17,9 +17,13 @@ class Directory
      */
     private $path;
     /**
-     * @var array
+     * @var File[]
      */
     private $files = array();
+    /**
+     * @var Directory[]
+     */
+    private $directories = array();
 
     /**
      * @param string $path
@@ -38,6 +42,14 @@ class Directory
     }
 
     /**
+     * @param Directory $directory
+     */
+    public function addDirectory(Directory $directory)
+    {
+        $this->directories[] = $directory;
+    }
+
+    /**
      * @return string
      */
     public function getPath()
@@ -50,9 +62,12 @@ class Directory
      */
     public function getDestination()
     {
-        return (($this->path === '.') ? '' : $this->path).'/index.html';
+        return $this->path.'index.html';
     }
 
+    /**
+     * @return array
+     */
     public function getBreadcrumb()
     {
         $paths = array();
@@ -71,10 +86,34 @@ class Directory
     }
 
     /**
-     * @return array
+     * @return File[]
      */
     public function getFileCollection()
     {
         return $this->files;
+    }
+
+    /**
+     * @return Directory[]
+     */
+    public function getDirectoryCollection()
+    {
+        return $this->directories;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLink()
+    {
+        return $this->getName() . '/index.html';
+    }
+
+    /**
+     * @return string
+     */
+    public function getName()
+    {
+        return basename($this->path);
     }
 }

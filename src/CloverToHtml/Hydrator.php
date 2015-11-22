@@ -42,7 +42,7 @@ class Hydrator
         $basePath = $root->getBasePath();
 
         foreach ($root->getFileCollection() as $file) {
-            $dirpath = dirname($file->getDestination($basePath));
+            $dirpath = $file->getDirectory($basePath);
             if ($root->hasDirectory($dirpath)) {
                 $directory = $root->getDirectoryByName($dirpath);
             } else {
@@ -70,7 +70,7 @@ class Hydrator
             $pathCollection[] = $file->getName();
         }
 
-        return $this->getCommonPath($pathCollection);
+        return $this->getCommonPath($pathCollection) . '/';
     }
 
     /**

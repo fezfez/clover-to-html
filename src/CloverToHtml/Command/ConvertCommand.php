@@ -60,5 +60,7 @@ class ConvertCommand extends Command
             $input->getArgument('target'),
             $input->getOption('template')
         );
+
+        $output->writeLn(sprintf('Coverage generated in %s', $input->getArgument('target')));
     }
 }

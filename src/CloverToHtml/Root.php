@@ -58,7 +58,7 @@ class Root
     }
 
     /**
-     * @return array
+     * @return File[]
      */
     public function getFileCollection()
     {

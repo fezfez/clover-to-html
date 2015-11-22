@@ -82,15 +82,12 @@ class Render
     {
         $configFile = $templatePath.'/config.json';
 
-        if (is_file($configFile)) {
+        if (is_file($configFile) === true) {
             $config = json_decode(file_get_contents($configFile), true);
 
             foreach ($config['files'] as $file) {
-                if (basename($file) === '*') {
-                } else {
-                    $this->createDirIfNotExist($target.'/'.$file);
-                    copy($templatePath.$file, $target.'/'.$file);
-                }
+                $this->createDirIfNotExist($target.'/'.$file);
+                copy($templatePath.$file, $target.'/'.$file);
             }
         }
     }
@@ -136,7 +133,7 @@ class Render
      */
     private function assetsPath($base, $actual)
     {
-        return str_repeat('../', (substr_count($actual, '/') - substr_count($base, '/')) - 2);
+        return str_repeat('../', (substr_count($actual, '/') - substr_count($base, '/')) - 1);
     }
 
     /**

@@ -57,7 +57,17 @@ class File
      */
     public function getDestination($basePath)
     {
-        return dirname(str_replace($basePath, '', $this->name)).'/'.basename($this->name, '.php').'.html';
+        return $this->getDir($basePath) . basename($this->name, '.php').'.html';
+    }
+
+    /**
+     * @param string $basePath
+     * @return string
+     */
+    public function getDirectory($basePath)
+    {
+        $dirname = dirname(str_replace($basePath, '', $this->name));
+        return ($dirname === '.' ? '' : $dirname . '/');
     }
 
     /**

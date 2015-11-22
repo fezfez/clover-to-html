@@ -12,7 +12,7 @@
     <title>{{ file.getName }}</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="{{ assets }}/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ assets }}css/bootstrap.min.css" rel="stylesheet">
     
 <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.8.0/styles/default.min.css">
     <style type="text/css">
@@ -39,7 +39,14 @@
     <div class="col-md-3">Functions and Methods</div>
     <div class="col-md-3">Lines</div>
 </div>
-
+{% for directory in directory.getDirectoryCollection %}
+    <div class="col-md-12">
+        <div class="col-md-3"><a href="{{ directory.getLink }}">{{ directory.getName }}</a></div>
+        <div class="col-md-3"></div>
+        <div class="col-md-3"></div>
+        <div class="col-md-3"></div>
+    </div>
+{% endfor %}
 {% for file in directory.getFileCollection %}
     <div class="col-md-12">
         <div class="col-md-3"><a href="{{ file.getLink }}">{{ file.getFileName }}</a></div>

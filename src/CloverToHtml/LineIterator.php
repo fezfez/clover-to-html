@@ -91,15 +91,9 @@ class LineIterator implements \Iterator
      */
     public function count()
     {
-        $i = 0;
+        $file = new \SplFileObject($this->file->getPathname());
 
-        while (!$this->file->eof()) {
-            ++$i;
-            $this->file->next();
-        }
-
-        $this->rewind();
-
-        return $i;
+        $file->seek(PHP_INT_MAX);
+        return $file->key() + 1;
     }
 }
