@@ -15,7 +15,7 @@ class Render
     /**
      * @var TwigCreator
      */
-    private $twig;
+    private $twigCreator;
     /**
      * @var ConfigDAO
      */
@@ -73,7 +73,7 @@ class Render
                 copy($templatePath.$file, $target.'/'.$file);
             }
         } catch (\InvalidArgumentException $e) {
-            var_dump($e->__toString());
+            // Nothing to do
         }
     }
 
