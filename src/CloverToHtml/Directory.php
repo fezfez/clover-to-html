@@ -10,7 +10,7 @@
  */
 namespace CloverToHtml;
 
-class Directory
+class Directory extends Stats implements StatsInterface
 {
     /**
      * @var string
@@ -76,7 +76,7 @@ class Directory
 
         foreach ($pathExploded as $number => $dirName) {
             $paths[] = array(
-                'link' => str_repeat('../', $number + 1),
+                'link' => str_repeat('../', $number + 1) . 'index.html',
                 'name' => ($dirName == '') ? 'Home' : $dirName,
                 'active' => ($number == count($pathExploded) - 1)
             );
@@ -115,5 +115,60 @@ class Directory
     public function getName()
     {
         return basename($this->path);
+    }
+
+    /**
+     * @return number
+     */
+    public function getLineCount()
+    {
+        return $this->countMagic('getLineCount');
+    }
+
+    /**
+     * @return number
+     */
+    public function getLineCoverageCount()
+    {
+        return $this->countMagic('getLineCoverageCount');
+    }
+
+    /**
+     * @return number
+     */
+    public function getCountClass()
+    {
+        return $this->countMagic('getCountClass');
+    }
+
+    /**
+     * @return number
+     */
+    public function getMethodCoveredCount()
+    {
+        return $this->countMagic('getMethodCoveredCount');
+    }
+
+    /**
+     * @return number
+     */
+    public function getMethodCount()
+    {
+        return $this->countMagic('getMethodCount');
+    }
+
+    /**
+     * @param string $method
+     * @return number
+     */
+    private function countMagic($method)
+    {
+        $line = 0;
+
+        foreach ($this->files as $file) {
+            $line += $file->$method();
+        }
+
+        return $line;
     }
 }

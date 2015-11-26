@@ -86,7 +86,7 @@ class Hydrator
         $common     = '/';
 
         while (($index = strpos($paths[0], '/', $lastOffset)) !== false) {
-            $dirLen = $index - $lastOffset + 1;    // include /
+            $dirLen = $index - $lastOffset + 1;
             $dir    = substr($paths[0], $lastOffset, $dirLen);
 
             foreach ($paths as $path) {

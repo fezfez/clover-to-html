@@ -12,7 +12,7 @@
     <title>{{ file.getName }}</title>
 
     <!-- Bootstrap core CSS -->
-    <link href="{{ assets }}/css/bootstrap.min.css" rel="stylesheet">
+    <link href="{{ assets }}css/bootstrap.min.css" rel="stylesheet">
     
 <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.8.0/styles/default.min.css">
     <style type="text/css">
@@ -55,7 +55,7 @@
                     {{ method.name }}
                 </a>
             </div>
-            <div class="col-md-3"></div>
+            <div class="col-md-3">{{ fze.lineCount }}</div>
             <div class="col-md-3"></div>
             <div class="col-md-3">{{ method.lineCount }}</div>
         </div>

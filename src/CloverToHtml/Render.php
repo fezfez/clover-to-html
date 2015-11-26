@@ -41,7 +41,7 @@ class Render
         }
 
         foreach ($root->getDirectoryCollection() as $directory) {
-            $this->renderDirectory($directory, $target);
+            $this->renderDirectory($directory, $root, $target);
             foreach ($directory->getFileCollection() as $file) {
                 $this->renderFile($file, $target, $root->getBasePath());
             }
@@ -71,7 +71,55 @@ class Render
 
         $this->twig->getLoader()->setPaths($templatePath);
 
+        if ($this->hasConfig($templatePath, 'extension') === true) {
+            $config = $this->loadConfig($templatePath);
+            foreach ($config['extension'] as $extensionName => $extension) {
+                $this->twig->addGlobal($extensionName, new $extension);
+            }
+        }
+
         return $templatePath;
+    }
+
+    /**
+     * @param string $templatePath
+     * @return string
+     */
+    private function getConfigPath($templatePath)
+    {
+        return $templatePath.'/config.json';
+    }
+
+    /**
+     * @param string $templatePath
+     * @return boolean
+     */
+    private function hasConfig($templatePath, $key = null)
+    {
+        if (is_file($this->getConfigPath($templatePath)) === false) {
+            return false;
+        }
+
+        if ($key === null) {
+            return true;
+        }
+
+        $config = $this->loadConfig($templatePath);
+
+        if (isset($config[$key])) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param string $templatePath
+     * @return array
+     */
+    private function loadConfig($templatePath)
+    {
+        return json_decode(file_get_contents($this->getConfigPath($templatePath)), true);
     }
 
     /**
@@ -80,10 +128,8 @@ class Render
      */
     private function copyAssets($templatePath, $target)
     {
-        $configFile = $templatePath.'/config.json';
-
-        if (is_file($configFile) === true) {
-            $config = json_decode(file_get_contents($configFile), true);
+        if ($this->hasConfig($templatePath, 'files') === true) {
+            $config = $this->loadConfig($templatePath);
 
             foreach ($config['files'] as $file) {
                 $this->createDirIfNotExist($target.'/'.$file);
@@ -141,7 +187,7 @@ class Render
      * @param string    $target
      * @param string    $basePath
      */
-    private function renderDirectory(Directory $directory, $target)
+    private function renderDirectory(Directory $directory, Root $root, $target)
     {
         $path = $target.'/'.$directory->getDestination();
 
@@ -153,6 +199,7 @@ class Render
                 'directory.twig',
                 array(
                     'directory' => $directory,
+                    'directoryCollection' => $root->getAllDirIn($directory),
                     'assets' => $this->assetsPath($target, $path),
                 )
             )

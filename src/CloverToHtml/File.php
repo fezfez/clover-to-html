@@ -10,7 +10,7 @@
  */
 namespace CloverToHtml;
 
-class File
+class File extends Stats implements StatsInterface
 {
     /**
      * @var string
@@ -111,6 +111,14 @@ class File
     }
 
     /**
+     * @return string
+     */
+    public function getDir()
+    {
+        return dirname($this->name);
+    }
+
+    /**
      * @return array
      */
     public function getLineCoverage()
@@ -119,11 +127,19 @@ class File
     }
 
     /**
-     * @return string
+     * @return number
      */
-    public function getDir()
+    public function getLineCoverageCount()
     {
-        return dirname($this->name);
+        $lineCovered = 0;
+
+        foreach ($this->lines as $line) {
+            if ($line['isCovered'] === true) {
+                ++$lineCovered;
+            }
+        }
+
+        return $lineCovered;
     }
 
     /**

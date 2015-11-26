@@ -92,4 +92,24 @@ class Root
     {
         return $this->directories[$name];
     }
+
+    /**
+     * @param Directory $name
+     * @return Directory[]
+     */
+    public function getAllDirIn(Directory $dir)
+    {
+        $dirCollection = array();
+        $name          = $dir->getName();
+
+        foreach ($this->directories as $dir) {
+            /* @var $dir Directory */
+            if (strlen($name) === 0 ||
+                (substr($dir->getName(), 0, strlen($name)) === $name) && strlen($dir->getName()) > strlen($name)) {
+                $dirCollection[] = $dir;
+            }
+        }
+
+        return $dirCollection;
+    }
 }
