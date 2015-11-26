@@ -10,13 +10,13 @@
  */
 namespace CloverToHtml;
 
-class RenderFactory
+class TwigCreatorFactory
 {
     /**
-     * @return \CloverToHtml\Render
+     * @return \CloverToHtml\TwigCreator
      */
     public static function getInstance()
     {
-        return new Render(TwigCreatorFactory::getInstance(), new ConfigDAO());
+        return new TwigCreator(new ConfigDAO());
     }
 }

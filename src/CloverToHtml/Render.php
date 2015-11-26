@@ -13,18 +13,24 @@ namespace CloverToHtml;
 class Render
 {
     /**
-     * @var \Twig_Environment
+     * @var TwigCreator
      */
     private $twig;
+    /**
+     * @var ConfigDAO
+     */
+    private $configDAO;
 
     /**
      * Construct.
      *
-     * @param \Twig_Environment $twig
+     * @param TwigCreator $twig
+     * @param ConfigDAO   $configDAO
      */
-    public function __construct(\Twig_Environment $twig)
+    public function __construct(TwigCreator $twig, ConfigDAO $configDAO)
     {
-        $this->twig = $twig;
+        $this->twigCreator = $twig;
+        $this->configDAO   = $configDAO;
     }
 
     /**
@@ -34,92 +40,24 @@ class Render
      */
     public function render(Root $root, $target, $templatePath = false)
     {
-        $templatePath = $this->setTemplatePath($templatePath);
-
-        foreach ($root->getFileCollection() as $file) {
-            $this->renderFile($file, $target, $root->getBasePath());
-        }
-
-        foreach ($root->getDirectoryCollection() as $directory) {
-            $this->renderDirectory($directory, $root, $target);
-            foreach ($directory->getFileCollection() as $file) {
-                $this->renderFile($file, $target, $root->getBasePath());
-            }
-        }
-
-        $this->copyAssets($templatePath, $target);
-    }
-
-    /**
-     * @param string|false $templatePath
-     *
-     * @throws \InvalidArgumentException
-     *
-     * @return string
-     */
-    private function setTemplatePath($templatePath = false)
-    {
         if ($templatePath === false) {
             $templatePath = __DIR__.'/Template/';
         }
 
-        if (($this->twig->getLoader() instanceof \Twig_Loader_Filesystem) === false) {
-            throw new \InvalidArgumentException(
-                sprintf('Twig loader "%s" not supported', get_class($this->twig->getLoader()))
-            );
+        $twig = $this->twigCreator->createInstance($templatePath);
+
+        foreach ($root->getFileCollection() as $file) {
+            $this->renderFile($file, $twig, $target, $root->getBasePath());
         }
 
-        $this->twig->getLoader()->setPaths($templatePath);
-
-        if ($this->hasConfig($templatePath, 'extension') === true) {
-            $config = $this->loadConfig($templatePath);
-            foreach ($config['extension'] as $extensionName => $extension) {
-                $this->twig->addGlobal($extensionName, new $extension);
+        foreach ($root->getDirectoryCollection() as $directory) {
+            $this->renderDirectory($directory, $root, $twig, $target);
+            foreach ($directory->getFileCollection() as $file) {
+                $this->renderFile($file, $twig, $target, $root->getBasePath());
             }
         }
 
-        return $templatePath;
-    }
-
-    /**
-     * @param string $templatePath
-     * @return string
-     */
-    private function getConfigPath($templatePath)
-    {
-        return $templatePath.'/config.json';
-    }
-
-    /**
-     * @param string $templatePath
-     * @return boolean
-     */
-    private function hasConfig($templatePath, $key = null)
-    {
-        if (is_file($this->getConfigPath($templatePath)) === false) {
-            return false;
-        }
-
-        if ($key === null) {
-            return true;
-        }
-
-        $config = $this->loadConfig($templatePath);
-
-        if (isset($config[$key])) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * @param string $templatePath
-     * @return array
-     */
-    private function loadConfig($templatePath)
-    {
-        return json_decode(file_get_contents($this->getConfigPath($templatePath)), true);
+        $this->copyAssets($templatePath, $target);
     }
 
     /**
@@ -128,13 +66,14 @@ class Render
      */
     private function copyAssets($templatePath, $target)
     {
-        if ($this->hasConfig($templatePath, 'files') === true) {
-            $config = $this->loadConfig($templatePath);
-
-            foreach ($config['files'] as $file) {
+        try {
+            $files = $this->configDAO->findConfig($templatePath, 'files');
+            foreach ($files as $file) {
                 $this->createDirIfNotExist($target.'/'.$file);
                 copy($templatePath.$file, $target.'/'.$file);
             }
+        } catch (\InvalidArgumentException $e) {
+            var_dump($e->__toString());
         }
     }
 
@@ -149,29 +88,6 @@ class Render
     }
 
     /**
-     * @param File   $file
-     * @param string $target
-     * @param string $basePath
-     */
-    private function renderFile(File $file, $target, $basePath)
-    {
-        $path = $target.'/'.$file->getDestination($basePath);
-
-        $this->createDirIfNotExist($path);
-
-        file_put_contents(
-            $path,
-            $this->twig->render(
-                'file.twig',
-                array(
-                    'file' => $file,
-                    'assets' => $this->assetsPath($target, $path),
-                )
-            )
-         );
-    }
-
-    /**
      * @param string $base
      * @param string $actual
      *
@@ -183,11 +99,36 @@ class Render
     }
 
     /**
-     * @param Directory $directory
-     * @param string    $target
-     * @param string    $basePath
+     * @param File              $file
+     * @param \Twig_Environment $twig
+     * @param string            $target
+     * @param string            $basePath
      */
-    private function renderDirectory(Directory $directory, Root $root, $target)
+    private function renderFile(File $file, \Twig_Environment $twig, $target, $basePath)
+    {
+        $path = $target.'/'.$file->getDestination($basePath);
+
+        $this->createDirIfNotExist($path);
+
+        file_put_contents(
+            $path,
+            $twig->render(
+                'file.twig',
+                array(
+                    'file' => $file,
+                    'assets' => $this->assetsPath($target, $path),
+                )
+            )
+         );
+    }
+
+    /**
+     * @param Directory         $directory
+     * @param Root              $root
+     * @param \Twig_Environment $twig
+     * @param string            $target
+     */
+    private function renderDirectory(Directory $directory, Root $root, \Twig_Environment $twig, $target)
     {
         $path = $target.'/'.$directory->getDestination();
 
@@ -195,7 +136,7 @@ class Render
 
         file_put_contents(
             $path,
-            $this->twig->render(
+            $twig->render(
                 'directory.twig',
                 array(
                     'directory' => $directory,
