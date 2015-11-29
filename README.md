@@ -1,8 +1,8 @@
 # clover to html
 
-[![Build Status](https://scrutinizer-ci.com/g/fezfez/clover-to-html/badges/build.png?b=master)](https://scrutinizer-ci.com/g/fezfez/coverage-clover-viewer/build-status/master)
-[![Code Coverage](https://scrutinizer-ci.com/g/fezfez/clover-to-html/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/fezfez/coverage-clover-viewer/?branch=master)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/fezfez/clover-to-html/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/fezfez/coverage-clover-viewer/?branch=master)
+[![Build Status](https://travis-ci.org/fezfez/clover-to-html.svg?branch=master)](https://travis-ci.org/fezfez/clover-to-html)
+[![Code Coverage](https://scrutinizer-ci.com/g/fezfez/clover-to-html/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/fezfez/clover-to-html/?branch=master)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/fezfez/clover-to-html/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/fezfez/clover-to-html/?branch=master)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/322a372b-337e-464d-a416-831441f5c7f2/small.png)](https://insight.sensiolabs.com/projects/322a372b-337e-464d-a416-831441f5c7f2)
 
 Currently in dev
