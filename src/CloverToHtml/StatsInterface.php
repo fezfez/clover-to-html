@@ -25,7 +25,7 @@ interface StatsInterface
     /**
      * @return number
     */
-    public function getLineCoveredPourcent();
+    public function getLineCoveredPercent();
 
     /**
      * @return number

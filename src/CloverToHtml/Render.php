@@ -34,13 +34,16 @@ class Render
     }
 
     /**
-     * @param Root   $root
-     * @param string $target
-     * @param string $templatePath
+     * @param Root $root
+     * @param $target
+     * @param $templatePath
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
-    public function render(Root $root, $target, $templatePath = false)
+    public function render(Root $root, $target, $templatePath = null): void
     {
-        if ($templatePath === false) {
+        if ($templatePath === null) {
             $templatePath = __DIR__.'/Template/';
         }
 
@@ -57,14 +60,14 @@ class Render
             }
         }
 
-        $this->copyAssets($templatePath, $target);
+        $this->copyAssets($templatePath. 'assets/', $target. '/assets');
     }
 
     /**
      * @param string $templatePath
      * @param string $target
      */
-    private function copyAssets($templatePath, $target)
+    private function copyAssets($templatePath, $target): void
     {
         try {
             $files = $this->configDAO->findConfig($templatePath, 'files');
@@ -80,10 +83,10 @@ class Render
     /**
      * @param string $path
      */
-    private function createDirIfNotExist($path)
+    private function createDirIfNotExist($path): void
     {
-        if (is_dir(dirname($path)) === false) {
-            mkdir(dirname($path), 0777, true);
+        if (!is_dir(dirname($path)) && !mkdir(dirname($path), 0777, true) && !is_dir(dirname($path))) {
+            return;
         }
     }
 
@@ -93,18 +96,21 @@ class Render
      *
      * @return string
      */
-    private function assetsPath($base, $actual)
+    private function assetsPath($base, $actual): string
     {
         return str_repeat('../', (substr_count($actual, '/') - substr_count($base, '/')) - 1);
     }
 
     /**
-     * @param File              $file
+     * @param File $file
      * @param \Twig_Environment $twig
-     * @param string            $target
-     * @param string            $basePath
+     * @param $target
+     * @param $basePath
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
-    private function renderFile(File $file, \Twig_Environment $twig, $target, $basePath)
+    private function renderFile(File $file, \Twig_Environment $twig, $target, $basePath): void
     {
         $path = $target.'/'.$file->getDestination($basePath);
 
@@ -123,12 +129,15 @@ class Render
     }
 
     /**
-     * @param Directory         $directory
-     * @param Root              $root
+     * @param Directory $directory
+     * @param Root $root
      * @param \Twig_Environment $twig
-     * @param string            $target
+     * @param $target
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
-    private function renderDirectory(Directory $directory, Root $root, \Twig_Environment $twig, $target)
+    private function renderDirectory(Directory $directory, Root $root, \Twig_Environment $twig, $target): void
     {
         $path = $target.'/'.$directory->getDestination();
 

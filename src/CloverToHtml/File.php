@@ -55,7 +55,7 @@ class File extends Stats implements StatsInterface
      * @param string $basePath
      * @return string
      */
-    public function getDestination($basePath)
+    public function getDestination($basePath): string
     {
         return $this->getDirectory($basePath) . basename($this->name, '.php').'.html';
     }
@@ -64,7 +64,7 @@ class File extends Stats implements StatsInterface
      * @param string $basePath
      * @return string
      */
-    public function getDirectory($basePath)
+    public function getDirectory($basePath): string
     {
         $dirname = dirname(str_replace($basePath, '', $this->name));
         return ($dirname === '.' ? '' : $dirname . '/');
@@ -73,7 +73,7 @@ class File extends Stats implements StatsInterface
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -81,7 +81,7 @@ class File extends Stats implements StatsInterface
     /**
      * @return string
      */
-    public function getFileName()
+    public function getFileName(): string
     {
         return basename($this->name);
     }
@@ -89,7 +89,7 @@ class File extends Stats implements StatsInterface
     /**
      * @return string
      */
-    public function getLink()
+    public function getLink(): string
     {
         return basename($this->name, '.php').'.html';
     }
@@ -97,7 +97,7 @@ class File extends Stats implements StatsInterface
     /**
      * @return array
      */
-    public function getClassCollection()
+    public function getClassCollection(): array
     {
         return $this->class;
     }
@@ -105,7 +105,7 @@ class File extends Stats implements StatsInterface
     /**
      * @return \CloverToHtml\LineIterator
      */
-    public function getLineCollection()
+    public function getLineCollection(): LineIterator
     {
         return new LineIterator($this->name, $this->lines);
     }
@@ -113,7 +113,7 @@ class File extends Stats implements StatsInterface
     /**
      * @return string
      */
-    public function getDir()
+    public function getDir(): string
     {
         return dirname($this->name);
     }
@@ -121,7 +121,7 @@ class File extends Stats implements StatsInterface
     /**
      * @return array
      */
-    public function getLineCoverage()
+    public function getLineCoverage(): array
     {
         return $this->lines;
     }

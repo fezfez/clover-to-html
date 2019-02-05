@@ -1,87 +1,251 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="../../favicon.ico">
-
+<head>
+    <meta charset="UTF-8">
     <title>{{ file.getName }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{{ assets }}assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="{{ assets }}assets/css/octicons.css" rel="stylesheet" type="text/css">
+    <link href="{{ assets }}assets/css/style.css" rel="stylesheet" type="text/css">
+    <link href="{{ assets }}assets/css/custom.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<header>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        {% for pathInfo in directory.getBreadcrumb %}
+                            {% if pathInfo.active %}
+                                <li class="active">&nbsp;/&nbsp;{{ pathInfo.name }}</li>
+                            {% else %}
+                                <li>&nbsp;/&nbsp;<a href="{{ pathInfo.link }}">{{ pathInfo.name }}</a></li>
+                            {% endif %}
+                        {% endfor %}
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+</header>
+<div class="container-fluid">
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <td>&nbsp;</td>
+                <td colspan="9">
+                    <div align="center"><strong>Code Coverage</strong></div>
+                </td>
+            </tr>
+            <tr>
+                <td>&nbsp;</td>
+                <td colspan="3">
+                    <div align="center"><strong>Classes and Traits</strong></div>
+                </td>
+                <td colspan="3">
+                    <div align="center"><strong>Functions and Methods</strong></div>
+                </td>
+                <td colspan="3">
+                    <div align="center"><strong>Lines</strong></div>
+                </td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td class="danger">Total</td>
+                <td class="danger big">
+                    <div class="progress">
+                        <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="31.09" aria-valuemin="0"
+                             aria-valuemax="100" style="width: %">
+                            <span class="sr-only">NaN% covered (danger)</span>
+                        </div>
+                    </div>
+                </td>
+                <td class="danger small">
+                    <div align="right">NaN%</div>
+                </td>
+                <td class="danger small">
+                    <div align="right">NaN&nbsp;/&nbsp;NaN</div>
+                </td>
+                <td class="danger big">
+                    <div class="progress">
+                        <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="0" aria-valuemin="0"
+                             aria-valuemax="100" style="width: 0%">
+                            <span class="sr-only">NaN% covered (danger)</span>
+                        </div>
+                    </div>
+                </td>
+                <td class="danger small">
+                    <div align="right">NaN%</div>
+                </td>
+                <td class="danger small">
+                    <div align="right">NaN&nbsp;/&nbsp;NaN</div>
+                </td>
+                <td class="danger big">
+                    <div class="progress">
+                        <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="0" aria-valuemin="0"
+                             aria-valuemax="100" style="width: 0%">
+                            <span class="sr-only">NaN% covered (danger)</span>
+                        </div>
+                    </div>
+                </td>
+                <td class="danger small">
+                    <div align="right">NaN%</div>
+                </td>
+                <td class="danger small">
+                    <div align="right">NaN&nbsp;/&nbsp;NaN</div>
+                </td>
+            </tr>
+            {% for directory in directoryCollection %}
+                <tr>
+                    {% if directory.getLineCount > 0 %}
+                        {% set fmPerc = (directory.getLineCoverageCount / directory.getLineCount * 100)|number_format(2) %}
+                    {% else %}
+                        {% set fmPerc = 0 %}
+                    {% endif %}
 
-    <!-- Bootstrap core CSS -->
-    <link href="{{ assets }}css/bootstrap.min.css" rel="stylesheet">
-    
-<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.8.0/styles/default.min.css">
-    <style type="text/css">
-        li.L0,li.L1,li.L2,li.L3,li.L5,li.L6,li.L7,li.L8{
-    list-style-type:unset !important;
-}
-    </style>
-  </head>
+                    {% if fmPerc < 35 %}{% set cssClass="danger" %}
+                    {% elseif fmPerc < 70 %}{% set cssClass="warning" %}
+                    {% else %}{% set cssClass="success" %}
+                    {% endif %}
+                    <td class="{{ cssClass }}"><img src="{{ assets }}assets/icons/file-directory.svg" class="octicon"/><a
+                                href="{{ directory.getLink }}">{{ directory.getName }}</a></td>
+                    <td class="{{ cssClass }} big">
+                        <div class="progress">
+                            <div class="progress-bar bg-{{ cssClass }}" role="progressbar" aria-valuenow="0" aria-valuemin="0"
+                                 aria-valuemax="100" style="width: 0%">
+                                <span class="sr-only">NaN% covered ({{ cssClass }})</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="{{ cssClass }} small">
+                        <div align="right">NaN%</div>
+                    </td>
+                    <td class="{{ cssClass }} small">
+                        <div align="right">{{ directory.getCountClass }}</div>
+                    </td>
+                    {% if directory.getMethodCount > 0 %}
+                        {% set mcPerc = (directory.getMethodCoveredCount / directory.getMethodCount * 100)|number_format(2) %}
+                    {% else %}
+                        {% set mcPerc = 0 %}
+                    {% endif %}
 
-  <body>
-    <div class="container">
-    <ul class="breadcrumb">
-        {% for pathInfo in directory.getBreadcrumb %}
-        {% if pathInfo.active %}
-            <li class="active">{{ pathInfo.name }}</li>
-        {% else %}
-            <li><a href="{{ pathInfo.link }}">{{ pathInfo.name }}</a></li>
-        {% endif %}
-        {% endfor %}
-    </ul>
-<div class="col-md-12">
-    <div class="col-md-3"></div>
-    <div class="col-md-3">Classes and Traits</div>
-    <div class="col-md-3">Functions and Methods</div>
-    <div class="col-md-3">Lines</div>
+                    {% if mcPerc < 35 %}{% set cssmClass="danger" %}
+                    {% elseif mcPerc < 70 %}{% set cssmClass="warning" %}
+                    {% else %}{% set cssmClass="success" %}
+                    {% endif %}
+                    <td class="{{ cssmClass }} big">
+                        <div class="progress">
+                            <div class="progress-bar bg-{{ cssmClass }}" role="progressbar" aria-valuenow="{{ mcPerc }}" aria-valuemin="0"
+                                 aria-valuemax="100" style="width: {{ mcPerc }}%">
+                                <span class="sr-only">{{ mcPerc }}% covered ({{ cssmClass }})</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="{{ cssmClass }} small">
+                        <div align="right">{{ mcPerc }}%</div>
+                    </td>
+                    <td class="{{ cssmClass }} small">
+                        <div align="right">{{ directory.getMethodCoveredCount }} / {{ directory.getMethodCount }}</div>
+                    </td>
+                    <td class="{{ cssClass }} big">
+                        <div class="progress">
+                            <div class="progress-bar bg-{{ cssClass }}" role="progressbar" aria-valuenow="{{ fmPerc }}" aria-valuemin="0"
+                                 aria-valuemax="100" style="width: {{ fmPerc }}%">
+                                <span class="sr-only">{{ fmPerc }}% covered ({{ cssClass }})</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="{{ cssClass }} small">
+                        <div align="right">{{ fmPerc }}%</div>
+                    </td>
+                    <td class="{{ cssClass }} small">
+                        <div align="right">{{ directory.getLineCoverageCount }}/{{ directory.getLineCount }}</div>
+                    </td>
+                </tr>
+            {% endfor %}
+            {% for file in directory.getFileCollection %}
+            <tr>
+                {% if file.getLineCount > 0 %}
+                    {% set fmPerc = (file.getLineCoverageCount / file.getLineCount * 100)|number_format(2) %}
+                {% else %}
+                    {% set fmPerc = 0 %}
+                {% endif %}
+
+                {% if fmPerc < 35 %}{% set cssClass="danger" %}
+                {% elseif fmPerc < 70 %}{% set cssClass="warning" %}
+                {% else %}{% set cssClass="success" %}
+                {% endif %}
+                <td class="{{ cssClass }}"><img src="{{ assets }}assets/icons/file-code.svg" class="octicon"/><a
+                            href="{{ file.getLink }}">{{ file.getFileName }}</a></td>
+                <td class="{{ cssClass }} big">
+                    <div class="progress">
+                        <div class="progress-bar bg-{{ cssClass }}" role="progressbar" aria-valuenow="0" aria-valuemin="0"
+                             aria-valuemax="100" style="width: 0%">
+                            <span class="sr-only">NaN% covered ({{ cssClass }})</span>
+                        </div>
+                    </div>
+                </td>
+                <td class="{{ cssClass }} small">
+                    <div align="right">NaN%</div>
+                </td>
+                <td class="{{ cssClass }} small">
+                    <div align="right">{{ file.getCountClass }}</div>
+                </td>
+                {% if file.getMethodCount > 0 %}
+                    {% set mcPerc = (file.getMethodCoveredCount / file.getMethodCount * 100)|number_format(2) %}
+                {% else %}
+                    {% set mcPerc = 0 %}
+                {% endif %}
+
+                {% if mcPerc < 35 %}{% set cssmClass="danger" %}
+                {% elseif mcPerc < 70 %}{% set cssmClass="warning" %}
+                {% else %}{% set cssmClass="success" %}
+                {% endif %}
+                <td class="{{ cssmClass }} big">
+                    <div class="progress">
+                        <div class="progress-bar bg-{{ cssmClass }}" role="progressbar" aria-valuenow="{{ mcPerc }}" aria-valuemin="0"
+                             aria-valuemax="100" style="width: {{ mcPerc }}%">
+                            <span class="sr-only">{{ mcPerc }}% covered ({{ cssmClass }})</span>
+                        </div>
+                    </div>
+                </td>
+                <td class="{{ cssmClass }} small">
+                    <div align="right">{{ mcPerc }}%</div>
+                </td>
+                <td class="{{ cssmClass }} small">
+                    <div align="right">{{ file.getMethodCoveredCount }} / {{ file.getMethodCount }}</div>
+                </td>
+                <td class="{{ cssClass }} big">
+                    <div class="progress">
+                        <div class="progress-bar bg-{{ cssClass }}" role="progressbar" aria-valuenow="{{ fmPerc }}" aria-valuemin="0"
+                             aria-valuemax="100" style="width: {{ fmPerc }}%">
+                            <span class="sr-only">{{ fmPerc }}% covered ({{ cssClass }})</span>
+                        </div>
+                    </div>
+                </td>
+                <td class="{{ cssClass }} small">
+                    <div align="right">{{ fmPerc }}%</div>
+                </td>
+                <td class="{{ cssClass }} small">
+                    <div align="right">{{ file.getLineCoverageCount }}/{{ file.getLineCount }}</div>
+                </td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <footer>
+        <hr/>
+        <h4>Legend</h4>
+        <p>
+            <span class="danger"><strong>Low</strong>: 0% to 35%</span>
+            <span class="warning"><strong>Medium</strong>: 35% to 70%</span>
+            <span class="success"><strong>High</strong>: 70% to 100%</span>
+        </p>
+    </footer>
 </div>
-{% for directory in directoryCollection %}
-    <div class="col-md-12">
-        <div class="col-md-3"><a href="{{ directory.getLink }}">{{ directory.getName }}</a></div>
-        <div class="col-md-3 {{ state.getLineState(directory) }}">
-            <div class="col-md-6">
-                <div class="progress">
-                    <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-                        60%
-                    </div>
-                </div>
-            </div>
-           <div class="col-md-6">{{ directory.getCountClass }}</div>
-        </div>
-        <div class="col-md-3">
-            <div class="col-md-6">
-                <div class="progress">
-                    <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;">
-                        60%
-                    </div>
-                </div>
-            </div>
-           <div class="col-md-6">{{ directory.getMethodCoveredCount }} / {{ directory.getMethodCount }}</div>
-        </div>
-        <div class="col-md-3">
-            <div class="col-md-6">
-                <div class="progress">
-                    <div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {{ directory.getLineCoveredPourcent }}%;">
-                        {{ directory.getLineCoveredPourcent }}%
-                    </div>
-                </div>
-            </div>
-           <div class="col-md-6">{{ directory.getLineCoverageCount }}/{{ directory.getLineCount }}</div>
-        </div>
-    </div>
-{% endfor %}
-{% for file in directory.getFileCollection %}
-    <div class="col-md-12">
-        <div class="col-md-3"><a href="{{ file.getLink }}">{{ file.getFileName }}</a></div>
-        <div class="col-md-3">{{ file.getCountClass }}</div>
-        <div class="col-md-3">{{ file.getMethodCoveredCount }} / {{ file.getMethodCount }}</div>
-        <div class="col-md-3">{{ file.getLineCoverageCount }}/{{ file.getLineCount }}</div>
-    </div>
-{% endfor %}
-    </div>
-  </body>
+</body>
 </html>

@@ -19,10 +19,7 @@ use CloverToHtml\ConverterFactory;
  */
 class ConvertCommandFactory
 {
-    /**
-     * @return \CloverToHtml\Command\Convert
-     */
-    public static function getInstance()
+    public static function getInstance(): ConvertCommand
     {
         return new ConvertCommand(ConverterFactory::getInstance());
     }

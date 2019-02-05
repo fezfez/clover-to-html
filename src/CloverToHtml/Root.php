@@ -28,7 +28,7 @@ class Root
     /**
      * @param string $basePath
      */
-    public function setBasePath($basePath)
+    public function setBasePath($basePath): void
     {
         $this->basePath = $basePath;
     }
@@ -36,7 +36,7 @@ class Root
     /**
      * @param File $file
      */
-    public function addFile(File $file)
+    public function addFile(File $file): void
     {
         $this->files[] = $file;
     }
@@ -44,7 +44,7 @@ class Root
     /**
      * @param Directory $directory
      */
-    public function addDirectory(Directory $directory)
+    public function addDirectory(Directory $directory): void
     {
         $this->directories[$directory->getPath()] = $directory;
     }
@@ -52,7 +52,7 @@ class Root
     /**
      * @return string
      */
-    public function getBasePath()
+    public function getBasePath(): string
     {
         return $this->basePath;
     }
@@ -60,7 +60,7 @@ class Root
     /**
      * @return File[]
      */
-    public function getFileCollection()
+    public function getFileCollection(): array
     {
         return $this->files;
     }
@@ -68,7 +68,7 @@ class Root
     /**
      * @return array
      */
-    public function getDirectoryCollection()
+    public function getDirectoryCollection(): array
     {
         return $this->directories;
     }
@@ -78,7 +78,7 @@ class Root
      *
      * @return bool
      */
-    public function hasDirectory($name)
+    public function hasDirectory($name): bool
     {
         return isset($this->directories[$name]);
     }
@@ -88,24 +88,26 @@ class Root
      *
      * @return Directory
      */
-    public function getDirectoryByName($name)
+    public function getDirectoryByName($name): Directory
     {
         return $this->directories[$name];
     }
 
     /**
-     * @param Directory $name
+     * @param Directory $directory
      * @return Directory[]
      */
-    public function getAllDirIn(Directory $dir)
+    public function getAllDirIn(Directory $directory): array
     {
-        $dirCollection = array();
-        $name          = $dir->getName();
+        $dirCollection  = array();
+        $currentDir     = trim($directory->getPath());
 
-        foreach ($this->directories as $dir) {
+        foreach ($this->directories as $path => $dir) {
             /* @var $dir Directory */
-            if (strlen($name) === 0 ||
-                (substr($dir->getName(), 0, strlen($name)) === $name) && strlen($dir->getName()) > strlen($name)) {
+            if ($currentDir !== '' &&
+                trim($path) !== $currentDir &&
+                strpos(trim($path), $currentDir) === 0
+                ) {
                 $dirCollection[] = $dir;
             }
         }

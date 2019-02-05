@@ -40,7 +40,7 @@ class LineIterator implements \Iterator
     /* (non-PHPdoc)
      * @see Iterator::rewind()
      */
-    public function rewind()
+    public function rewind(): void
     {
         $this->file->rewind();
         $this->position = 0;
@@ -73,7 +73,7 @@ class LineIterator implements \Iterator
     /* (non-PHPdoc)
      * @see Iterator::next()
      */
-    public function next()
+    public function next(): void
     {
         ++$this->position;
     }
@@ -81,7 +81,7 @@ class LineIterator implements \Iterator
     /* (non-PHPdoc)
      * @see Iterator::valid()
      */
-    public function valid()
+    public function valid(): bool
     {
         return !$this->file->eof();
     }

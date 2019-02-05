@@ -32,13 +32,14 @@ class Converter
     }
 
     /**
-     * @param string $clover
-     * @param string $target
-     * @param string $templatePath
-     *
-     * @throws \InvalidArgumentException
+     * @param $clover
+     * @param $target
+     * @param $templatePath
+     * @throws \Twig_Error_Loader
+     * @throws \Twig_Error_Runtime
+     * @throws \Twig_Error_Syntax
      */
-    public function convert($clover, $target, $templatePath = false)
+    public function convert($clover, $target, $templatePath = null): void
     {
         if (is_file($clover) === false) {
             throw new \InvalidArgumentException(sprintf('"%s" is not a file', $clover));

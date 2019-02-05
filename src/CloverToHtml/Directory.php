@@ -52,7 +52,7 @@ class Directory extends Stats implements StatsInterface
     /**
      * @return string
      */
-    public function getPath()
+    public function getPath(): string
     {
         return $this->path;
     }
@@ -60,7 +60,7 @@ class Directory extends Stats implements StatsInterface
     /**
      * @return string
      */
-    public function getDestination()
+    public function getDestination(): string
     {
         return $this->path.'index.html';
     }
@@ -68,17 +68,26 @@ class Directory extends Stats implements StatsInterface
     /**
      * @return array
      */
-    public function getBreadcrumb()
+    public function getBreadcrumb(): array
     {
         $paths = array();
 
         $pathExploded = explode('/', $this->path);
 
         foreach ($pathExploded as $number => $dirName) {
+            if ($number === count($pathExploded) - 1) {
+                continue;
+            }
+
+            $repeat = count($pathExploded) - $number - 2;
+            if ($repeat < 0) {
+                $repeat = 0;
+            }
+
             $paths[] = array(
-                'link' => str_repeat('../', $number + 1) . 'index.html',
-                'name' => ($dirName == '') ? 'Home' : $dirName,
-                'active' => ($number == count($pathExploded) - 1)
+                'link' => str_repeat('../', $repeat) . 'index.html',
+                'name' => (trim($dirName) === '') ? '' : $dirName,
+                'active' => ($number == count($pathExploded) - 2)
             );
         }
 
@@ -88,7 +97,7 @@ class Directory extends Stats implements StatsInterface
     /**
      * @return File[]
      */
-    public function getFileCollection()
+    public function getFileCollection(): array
     {
         return $this->files;
     }
@@ -96,7 +105,7 @@ class Directory extends Stats implements StatsInterface
     /**
      * @return Directory[]
      */
-    public function getDirectoryCollection()
+    public function getDirectoryCollection(): array
     {
         return $this->directories;
     }
@@ -104,7 +113,7 @@ class Directory extends Stats implements StatsInterface
     /**
      * @return string
      */
-    public function getLink()
+    public function getLink(): string
     {
         return $this->getName() . '/index.html';
     }
@@ -112,7 +121,7 @@ class Directory extends Stats implements StatsInterface
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return basename($this->path);
     }

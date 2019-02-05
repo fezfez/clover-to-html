@@ -15,7 +15,7 @@ class Stats
     /**
      * @return number
      */
-    public function getLineCoveredPourcent()
+    public function getLineCoveredPercent()
     {
         return round(($this->getLineCoverageCount() * 100) / $this->getLineCount(), 2);
     }

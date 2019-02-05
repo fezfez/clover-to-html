@@ -18,7 +18,7 @@ class ConfigDAO
      * @throws \InvalidArgumentException
      * @return array
      */
-    public function findConfig($templatePath, $key = null)
+    public function findConfig($templatePath, $key = null): array
     {
         if (is_file($this->getConfigPath($templatePath)) === false) {
             throw new \InvalidArgumentException(
@@ -27,7 +27,7 @@ class ConfigDAO
         }
 
         if ($key === null) {
-            return $config;
+            return [];
         }
 
         $config = $this->loadConfig($templatePath);
@@ -45,7 +45,7 @@ class ConfigDAO
      * @param string $templatePath
      * @return string
      */
-    private function getConfigPath($templatePath)
+    private function getConfigPath($templatePath): string
     {
         return $templatePath.'/config.json';
     }
@@ -54,7 +54,7 @@ class ConfigDAO
      * @param string $templatePath
      * @return array
      */
-    private function loadConfig($templatePath)
+    private function loadConfig($templatePath): array
     {
         return json_decode(file_get_contents($this->getConfigPath($templatePath)), true);
     }

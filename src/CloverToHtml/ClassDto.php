@@ -31,6 +31,26 @@ class ClassDto
     /**
      * @var int
      */
+    private $lineCoveredCount;
+    /**
+     * @var int
+     */
+    private $elementCount;
+    /**
+     * @var int
+     */
+    private $elementCoveredCount;
+    /**
+     * @var int
+     */
+    private $conditionalCount;
+    /**
+     * @var int
+     */
+    private $conditionalCoveredCount;
+    /**
+     * @var int
+     */
     private $methodCount;
     /**
      * @var int
@@ -40,7 +60,7 @@ class ClassDto
     /**
      * @param string $value
      */
-    public function setName($value)
+    public function setName($value): void
     {
         $this->name = $value;
     }
@@ -48,7 +68,7 @@ class ClassDto
     /**
      * @param integer $value
      */
-    public function setMethodCount($value)
+    public function setMethodCount($value): void
     {
         $this->methodCount = $value;
     }
@@ -57,14 +77,16 @@ class ClassDto
      * @param string $name
      * @param int    $crap
      * @param int    $lineCount
+     * @param int    $lineCoveredCount
      * @param int    $lineNumber
      */
-    public function addMethod($name, $crap, $lineCount, $lineNumber)
+    public function addMethod($name, $crap, $lineCount, $lineCoveredCount, $lineNumber): void
     {
         $this->method[] = array(
             'name' => $name,
             'crap' => $crap,
             'lineCount' => $lineCount,
+            'lineCoveredCount' => $lineCoveredCount,
             'lineNumber' => $lineNumber
         );
     }
@@ -72,7 +94,7 @@ class ClassDto
     /**
      * @param int $crap
      */
-    public function setCrap($crap)
+    public function setCrap($crap): void
     {
         $this->crap = $crap;
     }
@@ -80,15 +102,55 @@ class ClassDto
     /**
      * @param int $lineCount
      */
-    public function setLineCount($lineCount)
+    public function setLineCount($lineCount): void
     {
         $this->lineCount = $lineCount;
     }
 
     /**
+     * @param int $lineCoveredCount
+     */
+    public function setLineCoveredCount($lineCoveredCount): void
+    {
+        $this->lineCoveredCount = $lineCoveredCount;
+    }
+
+    /**
+     * @param int $elementCount
+     */
+    public function setElementCount($elementCount): void
+    {
+        $this->elementCount = $elementCount;
+    }
+
+    /**
+     * @param int $elementCoveredCount
+     */
+    public function setElementCoveredCount($elementCoveredCount): void
+    {
+        $this->elementCoveredCount = $elementCoveredCount;
+    }
+
+    /**
+     * @param int $conditionalCount
+     */
+    public function setConditionalCount($conditionalCount): void
+    {
+        $this->conditionalCount = $conditionalCount;
+    }
+
+    /**
+     * @param int $conditionalCoveredCount
+     */
+    public function setConditionalCoveredCount($conditionalCoveredCount): void
+    {
+        $this->conditionalCoveredCount = $conditionalCoveredCount;
+    }
+
+    /**
      * @param int $value
      */
-    public function setMethodCoveredCount($value)
+    public function setMethodCoveredCount($value): void
     {
         $this->methodCoveredCount = $value;
     }
@@ -96,7 +158,7 @@ class ClassDto
     /**
      * @return array
      */
-    public function getMethodCollection()
+    public function getMethodCollection(): array
     {
         return $this->method;
     }
@@ -112,7 +174,7 @@ class ClassDto
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -131,6 +193,14 @@ class ClassDto
     public function getLineCount()
     {
         return $this->lineCount;
+    }
+
+    /**
+     * @return number
+     */
+    public function getLineCoveredCount()
+    {
+        return $this->lineCoveredCount;
     }
 
     /**
