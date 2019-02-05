@@ -29,7 +29,7 @@ class ConvertCommand extends Command
     private $engine;
 
     /**
-     * @param Converter       $engine
+     * @param Converter $engine
      */
     public function __construct(Converter $engine)
     {
@@ -40,7 +40,7 @@ class ConvertCommand extends Command
     /* (non-PHPdoc)
      * @see \Symfony\Component\Console\Command\Command::configure()
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this
             ->setName('cloverToHtml:convert')
@@ -58,7 +58,7 @@ class ConvertCommand extends Command
         $this->engine->convert(
             $input->getArgument('source'),
             $input->getArgument('target'),
-            $input->getOption('template')
+            $input->getOption('template') ?: null
         );
 
         $output->writeLn(sprintf('Coverage generated in %s', $input->getArgument('target')));

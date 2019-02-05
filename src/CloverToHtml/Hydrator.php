@@ -18,7 +18,7 @@ class Hydrator
      *
      * @return Root
      */
-    public function xmlToDto(\SimpleXMLElement $xml, Root $root)
+    public function xmlToDto(\SimpleXMLElement $xml, Root $root): Root
     {
         foreach ($xml as $data) {
             foreach ($data->package as $package) {
@@ -27,7 +27,7 @@ class Hydrator
             $root = $this->hydrateFiles($data, $root);
         }
 
-        $root->setBasePath($this->calculeBasePath($root));
+        $root->setBasePath($this->calBasePath($root));
 
         return $this->hydrateDirectory($root);
     }
@@ -37,17 +37,17 @@ class Hydrator
      *
      * @return Root
      */
-    private function hydrateDirectory(Root $root)
+    private function hydrateDirectory(Root $root): Root
     {
         $basePath = $root->getBasePath();
 
         foreach ($root->getFileCollection() as $file) {
-            $dirpath = $file->getDirectory($basePath);
-            if ($root->hasDirectory($dirpath)) {
-                $directory = $root->getDirectoryByName($dirpath);
+            $dirPath = $file->getDirectory($basePath);
+            if ($root->hasDirectory($dirPath)) {
+                $directory = $root->getDirectoryByName($dirPath);
             } else {
                 $directory = new Directory();
-                $directory->setPath($dirpath);
+                $directory->setPath($dirPath);
             }
 
             $directory->addFile($file);
@@ -63,7 +63,7 @@ class Hydrator
      *
      * @return string
      */
-    private function calculeBasePath(Root $root)
+    private function calBasePath(Root $root): string
     {
         $pathCollection = array();
         foreach ($root->getFileCollection() as $file) {
@@ -80,7 +80,7 @@ class Hydrator
      *
      * @return string
      */
-    private function getCommonPath(array $paths)
+    private function getCommonPath(array $paths): string
     {
         $lastOffset = 1;
         $common     = '/';
@@ -90,7 +90,7 @@ class Hydrator
             $dir    = substr($paths[0], $lastOffset, $dirLen);
 
             foreach ($paths as $path) {
-                if (substr($path, $lastOffset, $dirLen) != $dir) {
+                if (substr($path, $lastOffset, $dirLen) !== $dir) {
                     return $common;
                 }
             }
@@ -108,7 +108,7 @@ class Hydrator
      *
      * @return Root
      */
-    private function hydrateFiles(\SimpleXMLElement $data, Root $root)
+    private function hydrateFiles(\SimpleXMLElement $data, Root $root): Root
     {
         foreach ($data->file as $fileXml) {
             $root->addFile($this->hydrateFile($fileXml));
@@ -122,7 +122,7 @@ class Hydrator
      *
      * @return File
      */
-    private function hydrateFile(\SimpleXMLElement $fileXml)
+    private function hydrateFile(\SimpleXMLElement $fileXml): File
     {
         $file = new File();
         $file->setName($this->findAttributeByName($fileXml, 'name'));
@@ -131,9 +131,14 @@ class Hydrator
         foreach ($fileXml->class as $classXml) {
             $class = new ClassDto();
             $class->setName($this->findAttributeByName($classXml, 'name'));
-            $class->setMethodCount($this->findAttributeByName($classXml->metrics, 'methods'));
-            $class->setLineCount($this->findAttributeByName($classXml->metrics, 'statements'));
-            $class->setMethodCoveredCount($this->findAttributeByName($classXml->metrics, 'coveredmethods'));
+            $class->setLineCount($this->findAttributeByName($fileXml->metrics, 'statements'));
+            $class->setLineCoveredCount($this->findAttributeByName($fileXml->metrics, 'coveredstatements'));
+            $class->setMethodCount($this->findAttributeByName($fileXml->metrics, 'methods'));
+            $class->setMethodCoveredCount($this->findAttributeByName($fileXml->metrics, 'coveredmethods'));
+            $class->setElementCount($this->findAttributeByName($fileXml->metrics, 'elements'));
+            $class->setElementCoveredCount($this->findAttributeByName($fileXml->metrics, 'coveredelements'));
+            $class->setConditionalCount($this->findAttributeByName($fileXml->metrics, 'conditionals'));
+            $class->setConditionalCoveredCount($this->findAttributeByName($fileXml->metrics, 'coveredconditionals'));
             $class = $this->hydrateMethod($fileXml, $class, $methodNumber);
 
             $file->addClass($class);
@@ -152,21 +157,54 @@ class Hydrator
 
     /**
      * @param \SimpleXMLElement $fileXml
-     * @param ClassDto $class
      *
-     * @return ClassDto
+     * @return array
      */
-    private function hydrateMethod(\SimpleXMLElement $fileXml, ClassDto $class, &$methodNumber)
+    private function getMethodCoveredLines(\SimpleXMLElement $fileXml): array
     {
+        $coveredLines = [];
+        $totalLines = [];
+        $methodName = null;
         foreach ($fileXml->line as $lineXml) {
             $type = $this->findAttributeByName($lineXml, 'type');
 
             // Must add method to class
             if ($type === 'method') {
+                $methodName = $this->findAttributeByName($lineXml, 'name');
+            }
+
+            if ($methodName !== null && $type === 'stmt') {
+                $coveredLines[$methodName] += (int) $this->findAttributeByName($lineXml, 'count');
+                $totalLines[$methodName]++;
+            }
+        }
+
+        return [$coveredLines, $totalLines];
+    }
+
+    /**
+     * @param \SimpleXMLElement $fileXml
+     * @param ClassDto $class
+     * @param $methodNumber
+     *
+     * @return ClassDto
+     */
+    private function hydrateMethod(\SimpleXMLElement $fileXml, ClassDto $class, &$methodNumber): ClassDto
+    {
+        $methodCoveredLines = $this->getMethodCoveredLines($fileXml)[0];
+        $methodLines = $this->getMethodCoveredLines($fileXml)[1];
+
+        foreach ($fileXml->line as $lineXml) {
+            $type = $this->findAttributeByName($lineXml, 'type');
+
+            // Must add method to class
+            if ($type === 'method') {
+                $methodName = $this->findAttributeByName($lineXml, 'name');
                 $class->addMethod(
-                    $this->findAttributeByName($lineXml, 'name'),
+                    $methodName,
                     $this->findAttributeByName($lineXml, 'crap'),
-                    0,
+                    $methodLines[$methodName],
+                    $methodCoveredLines[$methodName],
                     $this->findAttributeByName($lineXml, 'num')
                 );
                 ++$methodNumber;
@@ -188,7 +226,7 @@ class Hydrator
      *
      * @return string
      */
-    private function findAttributeByName(\SimpleXMLElement $element, $name)
+    private function findAttributeByName(\SimpleXMLElement $element, $name): string
     {
         foreach ($element->attributes() as $attrName => $attValue) {
             if ($attrName === $name) {

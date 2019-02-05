@@ -12,15 +12,15 @@ namespace CloverToHtml;
 
 class StateManager
 {
-    public function getLineState(StatsInterface $stats)
+    public function getLineState(StatsInterface $stats):? string
     {
-        $pourcent = $stats->getLineCoveredPourcent();
+        $percent = $stats->getLineCoveredPercent();
 
-        if ($pourcent > 70) {
+        if ($percent > 70) {
             return 'green';
-        } elseif ($pourcent > 50) {
+        } elseif ($percent > 50) {
             return 'warning';
-        } elseif ($pourcent > 40) {
+        } elseif ($percent > 40) {
             return 'danger';
         }
     }

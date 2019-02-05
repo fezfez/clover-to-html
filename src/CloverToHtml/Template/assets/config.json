@@ -1,0 +1,19 @@
+{
+    "files": [
+        "css/bootstrap.min.css",
+        "css/custom.css",
+        "css/nv.d3.min.css",
+        "css/octicons.css",
+        "css/style.css",
+        "js/bootstrap.min.js",
+        "js/jquery.min.js",
+        "js/d3.min.js",
+        "js/nv.d3.min.js",
+        "js/popper.min.js",
+        "icons/file-code.svg",
+        "icons/file-directory.svg"
+    ],
+    "extension" : {
+        "state" : "CloverToHtml\\StateManager"
+    }
+}

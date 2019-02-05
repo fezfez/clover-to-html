@@ -1,90 +1,287 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <link rel="icon" href="../../favicon.ico">
+<head>
+    <meta charset="UTF-8">
+    <title>Code Coverage for {{ file.getFileName }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="{{ assets }}assets/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="{{ assets }}assets/css/octicons.css" rel="stylesheet" type="text/css">
+    <link href="{{ assets }}assets/css/style.css" rel="stylesheet" type="text/css">
+    <link href="{{ assets }}assets/css/custom.css" rel="stylesheet" type="text/css">
+</head>
 
-    <title>{{ file.getName }}</title>
-
-    <!-- Bootstrap core CSS -->
-    <link href="{{ assets }}css/bootstrap.min.css" rel="stylesheet">
-    
-<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/highlight.js/8.8.0/styles/default.min.css">
-    <style type="text/css">
-        li.L0,li.L1,li.L2,li.L3,li.L5,li.L6,li.L7,li.L8{
-    list-style-type:unset !important;
-}
-    .covered-line {
-        background-color:#C4F0C4;
-    }
-    .not-covered-line {
-        background-color:#FFA6A6;
-    }
-    </style>
-  </head>
-
-  <body>
-    <div class="container">
-    <ul class="breadcrumb">
-    <li><a href="index.html">{{ file.getDir }}</a></li>
-    <li class="active">{{ file.getFileName }}</li>
-</ul>
-
-<div class="col-md-12">
-    <div class="col-md-3"></div>
-    <div class="col-md-3">Classes and Traits</div>
-    <div class="col-md-3">Functions and Methods</div>
-    <div class="col-md-3">Lines</div>
-</div>
-{% for class in file.getClassCollection %}
-    <div class="col-md-12">
-        <div class="col-md-3">{{ class.name }}</div>
-        <div class="col-md-3">1</div>
-        <div class="col-md-3">{{ class.getMethodCoveredCount }} / {{ class.getMethodCount }}</div>
-        <div class="col-md-3">{{ class.getLineCount }}</div>
-    </div>
-    {% for method in class.getMethodCollection %}
-        <div class="col-md-12">
-            <div class="col-md-3">
-                <a href="#line-{{ method.lineNumber }}" class="goto" data-target=".L{{ method.lineNumber }}">
-                    {{ method.name }}
-                </a>
+<body>
+<header>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        {% for node in file.getDir|split('/') %}
+                            {% set levelPath = "" %}
+                            {% set pathLength = file.getDir|split('/')|length-loop.index-1 %}
+                            {% if pathLength >= 0 %}
+                                {% for level in pathLength..0 %}
+                                    {% set levelPath = levelPath ~ "../" %}
+                                {% endfor %}
+                            {% endif %}
+                            <li class="breadcrumb-item"><a href="{{ levelPath }}index.html">{{ node }}</a></li>
+                        {% endfor %}
+                        <li class="breadcrumb-item active">{{ file.getFileName }}</li>
+                    </ol>
+                </nav>
             </div>
-            <div class="col-md-3">{{ fze.lineCount }}</div>
-            <div class="col-md-3"></div>
-            <div class="col-md-3">{{ method.lineCount }}</div>
         </div>
-    {% endfor %}
-{% endfor %}
-</table>
-
-<pre class="prettyprint linenums col-md-12">
-{% for lineNumber, line in file.getLineCollection %}{{ line.content  }}{% endfor %}
-</pre>
     </div>
-    <script src="{{ assets }}/js/jquery.1.11.3.min.js"></script>
-    <script src="http://cdn.jsdelivr.net/jquery.scrollto/2.1.2/jquery.scrollTo.min.js"></script>
-   
-    <script>
+</header>
+
+<div class="container-fluid">
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+            <tr>
+                <td>&nbsp</td>
+                <td colspan="10">
+                    <div align="center"><strong>Code Coverage</strong></div>
+                </td>
+            </tr>
+            <tr>
+                <td>&nbsp</td>
+                <td colspan="3">
+                    <div align="center"><strong>Classes and Traits</strong></div>
+                </td>
+                <td colspan="4">
+                    <div align="center"><strong>Functions and Methods</strong></div>
+                </td>
+                <td colspan="3">
+                    <div align="center"><strong>Lines</strong></div>
+                </td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td class="danger">Total</td>
+                <td class="danger big">
+                    <div class="progress">
+                        <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="0.00"
+                             aria-valuemin="0"
+                             aria-valuemax="100" style="width: 0.00%">
+                            <span class="sr-only">0.00% covered (danger)</span>
+                        </div>
+                    </div>
+                </td>
+                <td class="danger small">
+                    <div align="right">NaN%</div>
+                </td>
+                <td class="danger small">
+                    <div align="right">NaN&nbsp;/&nbsp;NaN</div>
+                </td>
+                <td class="danger big">
+                    <div class="progress">
+                        <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="0"
+                             aria-valuemin="0"
+                             aria-valuemax="100" style="width: 0%">
+                            <span class="sr-only">0% covered (danger)</span>
+                        </div>
+                    </div>
+                </td>
+                <td class="danger small">
+                    <div align="right">NaN%</div>
+                </td>
+                <td class="danger small">
+                    <div align="right"></div>
+                </td>
+                <td class="danger small"><abbr title="Change Risk Anti-Patterns (CRAP) Index">CRAP</abbr></td>
+                <td class="danger big">
+                    <div class="progress">
+                        <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="0"
+                             aria-valuemin="0"
+                             aria-valuemax="100" style="width: 0%">
+                            <span class="sr-only">0% covered (danger)</span>
+                        </div>
+                    </div>
+                </td>
+                <td class="danger small">
+                    <div align="right">NaN%</div>
+                </td>
+                <td class="danger small">
+                    <div align="right"></div>
+                </td>
+            </tr>
+            {% for class in file.getClassCollection %}
+                <tr>
+                    <td class="danger">{{ class.name }}</td>
+                    <td class="danger big">
+                        <div class="progress">
+                            <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="0.00"
+                                 aria-valuemin="0"
+                                 aria-valuemax="100" style="width: 0.00%">
+                                <span class="sr-only">0.00% covered (danger)</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="danger small">
+                        <div align="right">0.00%</div>
+                    </td>
+                    <td class="danger small">
+                        <div align="right">NaN&nbsp;/&nbsp;NaN</div>
+                    </td>
+                    {% if class.getMethodCount > 0 %}
+                        {% set fmPerc = (class.getMethodCoveredCount / class.getMethodCount * 100)|number_format(2) %}
+                    {% else %}
+                        {% set mcPerc = 0 %}
+                    {% endif %}
+
+                    {% if fmPerc < 35 %}{% set cssClass="danger" %}
+                    {% elseif fmPerc < 70 %}{% set cssClass="warning" %}
+                    {% else %}{% set cssClass="success" %}
+                    {% endif %}
+                    <td class="{{ cssClass }} big">
+                        <div class="progress">
+                            <div class="progress-bar bg-{{ cssClass }}" role="progressbar" aria-valuenow="{{ fmPerc }}"
+                                 aria-valuemin="{{ fmPerc }}"
+                                 aria-valuemax="100" style="width: {{ fmPerc }}%">
+                                <span class="sr-only">{{ fmPerc }}% covered ({{ cssClass }})</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="{{ cssClass }} small">
+                        <div align="right">{{ fmPerc }}%</div>
+                    </td>
+                    <td class="{{ cssClass }} small">
+                        <div align="right">{{ class.getMethodCoveredCount }} / {{ class.getMethodCount }}</div>
+                    </td>
+                    <td class="danger small">{{ class.getCrap }}</td>
+                    {% if class.getLineCount > 0 %}
+                        {% set linePerc = (class.getLineCoveredCount / class.getLineCount * 100)|number_format(2) %}
+                    {% else %}
+                        {% set linePerc = 0 %}
+                    {% endif %}
+
+                    {% if linePerc < 35 %}{% set cssClass="danger" %}
+                    {% elseif linePerc < 70 %}{% set cssClass="warning" %}
+                    {% else %}{% set cssClass="success" %}
+                    {% endif %}
+                    <td class="{{ cssClass }} big">
+                        <div class="progress">
+                            <div class="progress-bar bg-{{ cssClass }}" role="progressbar" aria-valuenow="{{ linePerc }}"
+                                 aria-valuemin="{{ linePerc }}"
+                                 aria-valuemax="100" style="width: {{ linePerc }}%">
+                                <span class="sr-only">{{ linePerc }}% covered ({{ cssClass }})</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="{{ cssClass }} small">
+                        <div align="right">{{ linePerc }}%</div>
+                    </td>
+                    <td class="{{ cssClass }} small">
+                        <div align="right">{{ class.getLineCoveredCount }} /&nbsp;{{ class.getLineCount }}</div>
+                    </td>
+                </tr>
+                {% for method in class.getMethodCollection %}
+                    <tr>
+                        {% if method.crap == 1 %}{% set cssStyle='success' %}{% else %}{% set cssStyle='danger' %}{% endif %}
+                        <td class="{{ cssStyle }}">
+                            <a href="#line-{{ method.lineNumber }}" class="goto" data-target="{{ method.lineNumber }}">
+                                {{ method.name }}
+                            </a>
+                        </td>
+                        <td class="{{ cssStyle }} big"></td>
+                        <td class="{{ cssStyle }} small"></td>
+                        <td class="{{ cssStyle }} small"></td>
+                        <td class="{{ cssStyle }} big">
+                            <div class="progress">
+                                <div class="progress-bar bg-{{ cssStyle }}" role="progressbar" aria-valuenow="{% if method.crap == 1 %}100{% else %}0{% endif %}"
+                                     aria-valuemin="{% if method.crap == 1 %}100{% else %}0{% endif %}"
+                                     aria-valuemax="100" style="width: {% if method.crap == 1 %}100{% else %}0{% endif %}%">
+                                    <span class="sr-only">{% if method.crap == 1 %}100{% else %}0{% endif %}% covered ({{ cssStyle }})</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="{{ cssStyle }} small">
+                            <div align="right">{% if method.crap == 1 %}100{% else %}0{% endif %}%</div>
+                        </td>
+                        <td class="{{ cssStyle }} small">
+                            <div align="right">{% if method.crap == 1 %}1/1{% else %}0/1{% endif %}</div>
+                        </td>
+                        <td class="{{ cssStyle }} small">{{ method.crap }}</td>
+                        {% if method.lineCount > 0 %}
+                            {% set linePerc = (method.lineCoveredCount / method.lineCount * 100)|number_format(2) %}
+                        {% else %}
+                            {% set linePerc = 0 %}
+                        {% endif %}
+
+                        {% if linePerc < 35 %}{% set cssClass="danger" %}
+                        {% elseif linePerc < 70 %}{% set cssClass="warning" %}
+                        {% else %}{% set cssClass="success" %}
+                        {% endif %}
+                        <td class="{{ cssClass }} big">
+                            <div class="progress">
+                                <div class="progress-bar bg-{{ cssClass }}" role="progressbar" aria-valuenow="{{ linePerc }}"
+                                     aria-valuemin="{{ linePerc }}"
+                                     aria-valuemax="100" style="width: {{ linePerc }}%">
+                                    <span class="sr-only">{{ linePerc }}% covered ({{ cssClass }})</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="{{ cssClass }} small">
+                            <div align="right">{{ linePerc }}%</div>
+                        </td>
+                        <td class="{{ cssClass }} small">
+                            <div align="right">{{ method.lineCoveredCount }}&nbsp;/&nbsp;{{ method.lineCount }}</div>
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {#<table id="code" class="table table-borderless table-condensed">#}
+        {#<tbody>#}
+        {#{% for lineNumber, line in file.getLineCollection %}#}
+            {#<tr class="danger">#}
+                {#<td>#}
+                    {#<div align="right"><a name="{{ lineNumber }}"></a><a href="#{{ lineNumber }}">{{ lineNumber }}</a>#}
+                    {#</div>#}
+                {#</td>#}
+                {#<td class="codeLine">#}
+                    {#<span class="default">{{ line.content }}</span>#}
+                {#</td>#}
+            {#</tr>#}
+        {#{% endfor %}#}
+        {#</tbody>#}
+    {#</table>#}
+    <pre class="prettyprint lang-php linenums col-md-12">{% for lineNumber, line in file.getLineCollection %}{{ line.content  }}{% endfor %}</pre>
+    <footer>
+        <hr/>
+        <h4>Legend</h4>
+        <p>
+            <span class="success"><strong>Executed</strong></span>
+            <span class="danger"><strong>Not Executed</strong></span>
+            <span class="warning"><strong>Dead Code</strong></span>
+        </p>
+    </footer>
+</div>
+<script src="{{ assets }}assets/js/jquery.min.js" type="text/javascript"></script>
+<script src="{{ assets }}assets/js/popper.min.js" type="text/javascript"></script>
+<script src="{{ assets }}assets/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="http://cdn.jsdelivr.net/jquery.scrollto/2.1.2/jquery.scrollTo.min.js"></script>
+
+<script>
     $('.goto').on('click', function() {
-        $(this).scrollTo($(this).data('target'), 800);
+        $(window).scrollTo($('ol.linenums li:eq(' + ($(this).data('target') - 1) + ')'), 800);
     });
-    
+
     lines = [
-{% for line in file.getLineCoverage %} { 'isCovered' : {{ line.isCovered  ? '1':'0' }}, 'number' : {{ line.number }} },{% endfor %}
-];
+        {% for line in file.getLineCoverage %} { 'isCovered' : {{ line.isCovered  ? '1':'0' }}, 'number' : {{ line.number }} },{% endfor %}
+    ];
     function printDone() {
         $.each(lines, function(index, line) {
-            $('ol.linenums li:eq(' + line.number + ')').addClass(line.isCovered == 1 ? 'covered-line' : 'not-covered-line');
+            $('ol.linenums li:eq(' + (line.number-1) + ')').addClass((line.isCovered == '1') ? 'covered-line' : 'not-covered-line');
         });
     }
     window.exports = { print_done: printDone };
-    </script>
-     <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?callback=print_done"></script>
-  </body>
+</script>
+<script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js?callback=print_done"></script>
+</body>
 </html>

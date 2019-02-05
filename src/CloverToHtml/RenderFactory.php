@@ -15,7 +15,7 @@ class RenderFactory
     /**
      * @return \CloverToHtml\Render
      */
-    public static function getInstance()
+    public static function getInstance(): Render
     {
         return new Render(TwigCreatorFactory::getInstance(), new ConfigDAO());
     }
