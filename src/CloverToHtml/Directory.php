@@ -86,8 +86,8 @@ class Directory extends Stats implements StatsInterface
 
             $paths[] = array(
                 'link' => str_repeat('../', $repeat) . 'index.html',
-                'name' => (trim($dirName) === '') ? '' : $dirName,
-                'active' => ($number == count($pathExploded) - 2)
+                'name' => (trim($dirName) === '') ? '.' : $dirName,
+                'active' => $number === (count($pathExploded) - 2)
             );
         }
 
