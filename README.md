@@ -5,12 +5,12 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/fezfez/clover-to-html/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/fezfez/clover-to-html/?branch=master)
 [![SensioLabsInsight](https://insight.sensiolabs.com/projects/322a372b-337e-464d-a416-831441f5c7f2/small.png)](https://insight.sensiolabs.com/projects/322a372b-337e-464d-a416-831441f5c7f2)
 
-Currently in dev
+Currently in dev (Forked from fezfez repository and added this one in the packagist as separate project)
 
 ## Install
 
 ```
-composer require fezfez/clover-to-html
+composer require Kolesar/clover-to-html
 ```
 
 ## Usage
