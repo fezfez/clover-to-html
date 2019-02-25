@@ -1,5 +1,5 @@
 {
-	"name" : "kolesar/coverage-clover-viewer",
+	"name" : "fezfez/coverage-clover-viewer",
 	"description" : "Clover to html",
 	"type" : "library",
 	"license": "MIT",
