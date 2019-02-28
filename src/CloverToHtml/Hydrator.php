@@ -174,8 +174,14 @@ class Hydrator
             }
 
             if ($methodName !== null && $type === 'stmt') {
-                $coveredLines[$methodName] += (int) $this->findAttributeByName($lineXml, 'count');
-                $totalLines[$methodName]++;
+                $count = (int) $this->findAttributeByName($lineXml, 'count');
+
+                $coveredLines[$methodName] += $count;
+
+                if ($count === 0) {
+                    $count = 1;
+                }
+                $totalLines[$methodName] += $count;
             }
         }
 

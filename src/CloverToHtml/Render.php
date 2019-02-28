@@ -98,7 +98,7 @@ class Render
      */
     private function assetsPath($base, $actual): string
     {
-        return str_repeat('../', (substr_count($actual, '/') - substr_count($base, '/')) - 1);
+        return str_repeat('../', (substr_count($actual, '/') - substr_count($base, '/')) - 2);
     }
 
     /**
